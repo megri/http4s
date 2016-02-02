@@ -3,14 +3,14 @@ package headers
 
 import org.http4s.util.{Renderable, Writer}
 
-import scalaz.NonEmptyList
+import scalaz.OneAnd
 
 // See https://tools.ietf.org/html/rfc7233
 
 object Range extends HeaderKey.Internal[Range] with HeaderKey.Singleton {
 
   def apply(unit: RangeUnit, r1: SubRange, rs: SubRange*): Range =
-    Range(unit, NonEmptyList(r1, rs:_*))
+    Range(unit, OneAnd(r1, rs:_*))
 
   def apply(r1: SubRange, rs: SubRange*): Range = apply(RangeUnit.Bytes, r1, rs:_*)
 
@@ -35,7 +35,7 @@ object Range extends HeaderKey.Internal[Range] with HeaderKey.Singleton {
 
 }
 
-case class Range(unit: RangeUnit, ranges: NonEmptyList[Range.SubRange]) extends Header.Parsed {
+case class Range(unit: RangeUnit, ranges: OneAnd[List, Range.SubRange]) extends Header.Parsed {
   override def key = Range
   override def renderValue(writer: Writer): writer.type = {
     writer << unit << '=' << ranges.head

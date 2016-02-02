@@ -11,7 +11,7 @@ package dsl
 import org.http4s.QueryParamDecoder
 import org.http4s.util.{UrlCodingUtils, UrlFormCodec}
 
-import scalaz.{ Failure, NonEmptyList, ValidationNel }
+import scalaz.{ Failure, ValidationNel }
 import scalaz.syntax.traverse._
 import scalaz.std.list._
 import scalaz.std.option._

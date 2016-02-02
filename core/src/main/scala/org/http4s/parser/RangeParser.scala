@@ -5,7 +5,7 @@ import org.http4s.headers.{`Accept-Ranges`, `Content-Range`, Range}
 import org.http4s.headers.Range.SubRange
 import org.parboiled2._
 
-import scalaz.NonEmptyList
+import scalaz.OneAnd
 
 
 private[parser] trait RangeParser {
@@ -15,7 +15,7 @@ private[parser] trait RangeParser {
 
     def entry = rule {
       capture(oneOrMore(Alpha)) ~ '=' ~ oneOrMore(byteRange).separatedBy(',') ~> { (s: String, rs: Seq[SubRange]) =>
-        Range(RangeUnit(s), NonEmptyList(rs.head, rs.tail:_*))
+        Range(RangeUnit(s), OneAnd(rs.head, rs.tail:_*))
       }
     }
   }.parse

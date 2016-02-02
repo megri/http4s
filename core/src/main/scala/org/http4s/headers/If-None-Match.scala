@@ -3,7 +3,7 @@ package headers
 
 import org.http4s.util.Writer
 
-import scalaz.NonEmptyList
+import scalaz.OneAnd
 
 object `If-None-Match` extends HeaderKey.Internal[`If-None-Match`] with HeaderKey.Singleton {
 
@@ -11,11 +11,11 @@ object `If-None-Match` extends HeaderKey.Internal[`If-None-Match`] with HeaderKe
   val `*` = `If-None-Match`(None)
 
   def apply(first: ETag.EntityTag, rest: ETag.EntityTag*): `If-None-Match` = {
-    `If-None-Match`(Some(NonEmptyList(first, rest:_*)))
+    `If-None-Match`(Some(OneAnd(first, rest:_*)))
   }
 }
 
-case class `If-None-Match`(tags: Option[NonEmptyList[ETag.EntityTag]]) extends Header.Parsed {
+case class `If-None-Match`(tags: Option[OneAnd[List, ETag.EntityTag]]) extends Header.Parsed {
   override def key: HeaderKey = `If-None-Match`
   override def value: String = tags match {
     case None       => "*"

@@ -4,7 +4,7 @@ import org.scalacheck.Arbitrary
 import org.specs2.ScalaCheck
 import org.specs2.scalacheck.Parameters
 
-import scalaz.{NonEmptyList, \/-}
+import scalaz.{OneAnd, \/-}
 
 class UrlFormSpec extends Http4sSpec with ScalaCheck {
   // These tests are slow.  Let's lower the bar.
@@ -69,9 +69,9 @@ class UrlFormSpec extends Http4sSpec with ScalaCheck {
     }
 
     // Not quite sure why this is necessary, but the compiler gives us a diverging implicit if not present
-    implicit val chooseArb: Arbitrary[NonEmptyList[String]] = scalaz.scalacheck.ScalazArbitrary.NonEmptyListArbitrary
+    implicit val chooseArb: Arbitrary[OneAnd[List, String]] = scalaz.scalacheck.ScalazArbitrary.OneAndArbitrary
     "construct consistently from kv-pairs or and Map[String, Seq[String]]" in prop {
-      map: Map[String, NonEmptyList[String]] => // non-empty because the kv-constructor can't represent valueless fields
+      map: Map[String, OneAnd[List, String]] => // non-empty because the kv-constructor can't represent valueless fields
         val flattened = for {
           (k, vs) <- map.toSeq
           v <- vs.list

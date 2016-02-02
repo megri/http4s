@@ -18,15 +18,15 @@
  */
 package org.http4s
 
-import scalaz.NonEmptyList
-
 import org.http4s.util.{Writer, CaseInsensitiveString, Renderable, StringWriter}
 import org.http4s.util.string._
 
 import scala.util.hashing.MurmurHash3
+import scalaz.OneAnd
 
 /**
- * Abstract representation o the HTTP header
+  * Abstract representation o the HTTP header
+ *
  * @see org.http4s.HeaderKey
  */
 sealed trait Header extends Renderable with Product {
@@ -78,6 +78,7 @@ object Header {
    *
    * This can be considered the simplest representation where the header is specified as the product of
    * a key and a value
+ *
    * @param name case-insensitive string used to identify the header
    * @param value String representation of the header value
    */
@@ -104,7 +105,7 @@ object Header {
   trait Recurring extends Parsed {
     type Value
     def key: HeaderKey.Recurring
-    def values: NonEmptyList[Value]
+    def values: OneAnd[List, Value]
   }
 
   /** Simple helper trait that provides a default way of rendering the value */

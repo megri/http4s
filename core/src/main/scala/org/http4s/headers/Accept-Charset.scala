@@ -1,11 +1,11 @@
 package org.http4s
 package headers
 
-import scalaz.NonEmptyList
+import scalaz.OneAnd
 
 object `Accept-Charset` extends HeaderKey.Internal[`Accept-Charset`] with HeaderKey.Recurring
 
-final case class `Accept-Charset`(values: NonEmptyList[CharsetRange]) extends Header.RecurringRenderable {
+final case class `Accept-Charset`(values: OneAnd[List, CharsetRange]) extends Header.RecurringRenderable {
   def key = `Accept-Charset`
   type Value = CharsetRange
 
