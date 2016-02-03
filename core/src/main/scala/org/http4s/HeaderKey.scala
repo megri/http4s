@@ -3,6 +3,7 @@ package org.http4s
 import scala.annotation.tailrec
 import scala.reflect.ClassTag
 import org.http4s.util.CaseInsensitiveString
+import org.http4s.util.oneandlist._
 import org.http4s.util.string._
 
 import scalaz.OneAnd
@@ -40,17 +41,17 @@ object HeaderKey {
     type HeaderT <: Header.Recurring
     type GetT = Option[HeaderT]
     def apply(values: OneAnd[List, HeaderT#Value]): HeaderT
-    def apply(first: HeaderT#Value, more: HeaderT#Value*): HeaderT = apply(OneAnd.apply(first, more: _*))
+    def apply(first: HeaderT#Value, more: HeaderT#Value*): HeaderT = apply(OneAnd.apply(first, more.toList))
     def from(headers: Headers): Option[HeaderT] = {
       @tailrec def loop(hs: Headers, acc: OneAnd[List, HeaderT#Value]): OneAnd[List, HeaderT#Value] =
         if (hs.nonEmpty) matchHeader(hs.head) match {
-          case Some(header) => loop(hs.tail, acc append header.values)
+          case Some(header) => loop(hs.tail, acc append header.values.asInstanceOf[OneAnd[List, HeaderT#Value]])
           case None => loop(hs.tail, acc)
         }
         else acc
       @tailrec def start(hs: Headers): Option[HeaderT] =
         if (hs.nonEmpty) matchHeader(hs.head) match {
-          case Some(header) => Some(apply(loop(hs.tail, header.values)))
+          case Some(header) => Some(apply(loop(hs.tail, header.values.asInstanceOf[OneAnd[List, HeaderT#Value]])))
           case None => start(hs.tail)
         }
         else None

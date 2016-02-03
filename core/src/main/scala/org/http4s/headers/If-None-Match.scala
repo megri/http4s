@@ -2,6 +2,7 @@ package org.http4s
 package headers
 
 import org.http4s.util.Writer
+import org.http4s.util.oneandlist._
 
 import scalaz.OneAnd
 
@@ -11,7 +12,7 @@ object `If-None-Match` extends HeaderKey.Internal[`If-None-Match`] with HeaderKe
   val `*` = `If-None-Match`(None)
 
   def apply(first: ETag.EntityTag, rest: ETag.EntityTag*): `If-None-Match` = {
-    `If-None-Match`(Some(OneAnd(first, rest:_*)))
+    `If-None-Match`(Some(OneAnd(first, rest.toList)))
   }
 }
 
@@ -19,7 +20,7 @@ case class `If-None-Match`(tags: Option[OneAnd[List, ETag.EntityTag]]) extends H
   override def key: HeaderKey = `If-None-Match`
   override def value: String = tags match {
     case None       => "*"
-    case Some(tags) => tags.list.mkString(",")
+    case Some(tags) => tags.mkString(",")
   }
   override def renderValue(writer: Writer): writer.type = writer.append(value)
 }

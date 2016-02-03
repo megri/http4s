@@ -89,7 +89,7 @@ final case class Client(open: Service[Request, DisposableResponse], shutdown: Ta
   def fetchAs[A](req: Request)(implicit d: EntityDecoder[A]): Task[A] = {
     val r = if (d.consumes.nonEmpty) {
       val m = d.consumes.toList
-      req.putHeaders(Accept(m.head, m.tail:_*))
+      req.putHeaders(Accept(m.head, m.tail: _*))
     } else req
     fetch(r) { resp =>
       d.decode(resp, strict = false).fold(e => throw DecodeFailureException(e), identity)

@@ -37,7 +37,7 @@ private[parser] trait SimpleHeaders {
       def entry = rule {
         oneOrMore(Token).separatedBy(ListSep) ~ EOL ~>  { ts: Seq[String] =>
           val ms = ts.map(Method.fromString(_).getOrElse(sys.error("Impossible. Please file a bug report.")))
-          Allow(OneAnd(ms.head, ms.tail:_*))
+          Allow(OneAnd(ms.head, ms.tail.toList))
         }
       }
     }.parse
@@ -105,7 +105,7 @@ private[parser] trait SimpleHeaders {
     def entry = rule {
       "*" ~ push(`If-None-Match`.`*`) |
       oneOrMore(EntityTag).separatedBy(ListSep) ~> { tags: Seq[EntityTag] =>
-        `If-None-Match`(Some(OneAnd(tags.head, tags.tail:_*)))
+        `If-None-Match`(Some(OneAnd(tags.head, tags.tail.toList)))
       }
     }
   }.parse

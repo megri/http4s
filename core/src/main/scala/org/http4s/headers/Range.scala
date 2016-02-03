@@ -10,7 +10,7 @@ import scalaz.OneAnd
 object Range extends HeaderKey.Internal[Range] with HeaderKey.Singleton {
 
   def apply(unit: RangeUnit, r1: SubRange, rs: SubRange*): Range =
-    Range(unit, OneAnd(r1, rs:_*))
+    Range(unit, OneAnd(r1, rs.toList))
 
   def apply(r1: SubRange, rs: SubRange*): Range = apply(RangeUnit.Bytes, r1, rs:_*)
 
