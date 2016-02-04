@@ -15,7 +15,7 @@ final case class `X-Forwarded-For`(values: NonEmptyList[Option[InetAddress]]) ex
   override lazy val value = super.value
   override def renderValue(writer: Writer): writer.type = {
     values.head.fold(writer.append("unknown"))(i => writer.append(i.getHostAddress))
-    values.tail.foreach(append(writer, _))
+    values.tail.map(append(writer, _))
     writer
   }
 

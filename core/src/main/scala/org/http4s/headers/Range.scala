@@ -39,7 +39,7 @@ case class Range(unit: RangeUnit, ranges: NonEmptyList[Range.SubRange]) extends 
   override def key = Range
   override def renderValue(writer: Writer): writer.type = {
     writer << unit << '=' << ranges.head
-    ranges.tail.foreach( writer << ',' << _)
+    ranges.tail.map( writer << ',' << _)
     writer
   }
 }

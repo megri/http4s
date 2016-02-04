@@ -112,7 +112,7 @@ object Header {
     type Value <: Renderable
     override def renderValue(writer: Writer): writer.type = {
       values.head.render(writer)
-      values.tail.foreach( writer << ", " << _ )
+      values.tail.map( writer << ", " << _ )
       writer
     }
   }

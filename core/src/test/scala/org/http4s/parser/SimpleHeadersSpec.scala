@@ -7,6 +7,7 @@ import Http4s._
 import headers._
 import org.http4s.headers.ETag.EntityTag
 import scalaz.{\/-, NonEmptyList, Success}
+import scalaz.syntax.std.option._
 import java.net.InetAddress
 
 class SimpleHeadersSpec extends Http4sSpec {
@@ -132,11 +133,11 @@ class SimpleHeadersSpec extends Http4sSpec {
     }
 
     "parse X-Forward-Spec" in {
-      val header1 = `X-Forwarded-For`(NonEmptyList(Some(InetAddress.getLocalHost)))
+      val header1 = `X-Forwarded-For`(NonEmptyList(InetAddress.getLocalHost.some))
       HttpHeaderParser.parseHeader(header1.toRaw) must be_\/-(header1)
 
-      val header2 = `X-Forwarded-For`(NonEmptyList(Some(InetAddress.getLocalHost),
-                                Some(InetAddress.getLoopbackAddress)))
+      val header2 = `X-Forwarded-For`(NonEmptyList(InetAddress.getLocalHost.some,
+                                InetAddress.getLoopbackAddress.some))
       HttpHeaderParser.parseHeader(header2.toRaw) must be_\/-(header2)
 
       val bad = Header(header1.name.toString, "foo")

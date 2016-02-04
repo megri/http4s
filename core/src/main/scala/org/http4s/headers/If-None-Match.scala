@@ -19,7 +19,7 @@ case class `If-None-Match`(tags: Option[NonEmptyList[ETag.EntityTag]]) extends H
   override def key: HeaderKey = `If-None-Match`
   override def value: String = tags match {
     case None       => "*"
-    case Some(tags) => tags.list.mkString(",")
+    case Some(tags) => tags.mkString(",")
   }
   override def renderValue(writer: Writer): writer.type = writer.append(value)
 }

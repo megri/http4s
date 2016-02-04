@@ -83,7 +83,9 @@ trait TestInstances {
     Arbitrary { arbitrary[QValue].map(CharsetRange.`*`.withQValue(_)) }
 
   implicit val arbitraryAcceptCharset: Arbitrary[`Accept-Charset`] =
-    Arbitrary { arbitrary[NonEmptyList[CharsetRange.`*`]].map(`Accept-Charset`(_)) }
+    Arbitrary { arbitrary[NonEmptyList[CharsetRange.`*`]].map { nel =>
+      `Accept-Charset`(nel.asInstanceOf[CharsetRange])
+    }}
 
   implicit val urlFormArb: Arbitrary[UrlForm] = Arbitrary {
     // new String("\ufffe".getBytes("UTF-16"), "UTF-16") != "\ufffe".

@@ -13,8 +13,8 @@ object Connection extends HeaderKey.Internal[Connection] with HeaderKey.Recurrin
 final case class Connection(values: NonEmptyList[CaseInsensitiveString]) extends Header.Recurring {
   override def key = Connection
   type Value = CaseInsensitiveString
-  def hasClose = values.list.contains("close".ci)
-  def hasKeepAlive = values.list.contains("keep-alive".ci)
-  override def renderValue(writer: Writer): writer.type = writer.addStrings(values.list.map(_.toString), ", ")
+  def hasClose = values.contains("close".ci)
+  def hasKeepAlive = values.contains("keep-alive".ci)
+  override def renderValue(writer: Writer): writer.type = writer.addStringNel(values.map(_.toString), ", ")
 }
 

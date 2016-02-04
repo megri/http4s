@@ -8,6 +8,6 @@ object `Accept-Language` extends HeaderKey.Internal[`Accept-Language`] with Head
 final case class `Accept-Language`(values: NonEmptyList[LanguageTag]) extends Header.RecurringRenderable {
   def key = `Accept-Language`
   type Value = LanguageTag
-  def preferred: LanguageTag = values.tail.fold(values.head)((a, b) => if (a.q >= b.q) a else b)
-  def satisfiedBy(languageTag: LanguageTag) = values.list.exists(_.satisfiedBy(languageTag))
+  def preferred: LanguageTag = values.list.foldLeft(values.head)((a, b) => if (a.q >= b.q) a else b)
+  def satisfiedBy(languageTag: LanguageTag) = values.exists(_.satisfiedBy(languageTag))
 }

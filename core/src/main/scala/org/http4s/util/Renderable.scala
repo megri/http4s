@@ -6,13 +6,16 @@ import java.util.Locale
 
 import scala.annotation.tailrec
 import scala.collection.immutable.BitSet
+import scalaz.{NonEmptyList, IList}
 
 /** A type class that describes how to efficiently render a type
- * @tparam T the type which will be rendered
+  *
+  * @tparam T the type which will be rendered
  */
 trait Renderer[T] {
 
   /** Renders the object to the writer
+    *
     * @param writer [[Writer]] to render to
     * @param t object to render
     * @return the same [[Writer]] provided
@@ -99,6 +102,13 @@ trait Writer {
     append(end)
   }
 
+  def addStringNel(list: NonEmptyList[String], sep: String = "", start: String = "", end: String = ""): this.type = {
+    append(start)
+    append(list.head)
+    list.tail.map(s => append(sep).append(s))
+    append(end)
+  }
+
   def addSeq[T: Renderer](s: Seq[T], sep: String = "", start: String = "", end: String = ""): this.type = {
     append(start)
     if (s.nonEmpty) {
@@ -122,6 +132,7 @@ trait Writer {
 }
 
 /** [[Writer]] that will result in a `String`
+  *
   * @param size initial buffer size of the underlying `StringBuilder`
   */
 class StringWriter(size: Int = 64) extends Writer {
