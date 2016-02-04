@@ -24,7 +24,7 @@ class ResponseGeneratorSpec extends Specification {
     val w = EntityEncoder.encodeBy[String](EntityEncoder.stringEncoder.headers.put(Accept(MediaRange.`audio/*`)))(
                             EntityEncoder.stringEncoder.toEntity(_))
 
-    Ok("foo")(w).run.headers.get(Accept).get.values.list must_== List(MediaRange.`audio/*`)
+    Ok("foo")(w).run.headers.get(Accept).get.values must_== List(MediaRange.`audio/*`)
   }
 
   "Explicitly added headers have priority" in {

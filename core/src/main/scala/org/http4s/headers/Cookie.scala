@@ -7,13 +7,16 @@ import scalaz.NonEmptyList
 
 object Cookie extends HeaderKey.Internal[Cookie] with HeaderKey.Recurring
 
-final case class Cookie(values: NonEmptyList[org.http4s.Cookie]) extends Header.RecurringRenderable {
+final case class Cookie(values: List[org.http4s.Cookie]) extends Header.RecurringRenderable {
   override def key = Cookie
   type Value = org.http4s.Cookie
   override def renderValue(writer: Writer): writer.type = {
-    values.head.render(writer)
-    values.tail.foreach( writer << "; " << _ )
-    writer
+    values match {
+      case List(head, tail@_*) =>
+        head.render(writer)
+        tail.foreach( writer << "; " << _ )
+        writer
+    }
   }
 }
 

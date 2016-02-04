@@ -10,9 +10,9 @@ import scalaz.NonEmptyList
 object Range extends HeaderKey.Internal[Range] with HeaderKey.Singleton {
 
   def apply(unit: RangeUnit, r1: SubRange, rs: SubRange*): Range =
-    Range(unit, NonEmptyList(r1, rs:_*))
+    Range(unit, r1 :: rs.toList)
 
-  def apply(r1: SubRange, rs: SubRange*): Range = apply(RangeUnit.Bytes, r1, rs:_*)
+  def apply(r1: SubRange, rs: SubRange*): Range = apply(RangeUnit.Bytes, r1, rs: _*)
 
   def apply(begin: Long, end: Long): Range = apply(SubRange(begin, Some(end)))
 
@@ -20,6 +20,7 @@ object Range extends HeaderKey.Internal[Range] with HeaderKey.Singleton {
 
   object SubRange {
     def apply(first: Long): SubRange = SubRange(first, None)
+
     def apply(first: Long, second: Long): SubRange = SubRange(first, Some(second))
   }
 
@@ -27,20 +28,21 @@ object Range extends HeaderKey.Internal[Range] with HeaderKey.Singleton {
     /** Base method for rendering this object efficiently */
     override def render(writer: Writer): writer.type = {
       writer << first
-      second.foreach( writer << '-' << _ )
+      second.foreach(writer << '-' << _)
       writer
     }
   }
-
-
 }
 
-case class Range(unit: RangeUnit, ranges: NonEmptyList[Range.SubRange]) extends Header.Parsed {
+case class Range private (unit: RangeUnit, ranges: List[Range.SubRange]) extends Header.Parsed {
   override def key = Range
   override def renderValue(writer: Writer): writer.type = {
-    writer << unit << '=' << ranges.head
-    ranges.tail.foreach( writer << ',' << _)
-    writer
+    ranges match {
+      case List(head, tail@_*) =>
+        writer << unit << '=' << head
+        tail.foreach( writer << ',' << _)
+        writer
+    }
   }
 }
 

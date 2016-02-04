@@ -73,13 +73,13 @@ object Http4sBuild extends Build {
   def scalaReflect(sv: String) = "org.scala-lang"            % "scala-reflect"           % sv
   lazy val scalameter          = "com.storm-enroute"        %% "scalameter"              % "0.6"
   lazy val scalaXml            = "org.scala-lang.modules"   %% "scala-xml"               % "1.0.5"
-  lazy val scalazCore          = "org.scalaz"               %% "scalaz-core"             % "7.1.3"
+  lazy val scalazCore          = "org.scalaz"               %% "scalaz-core"             % "7.2.0"
   lazy val scalazScalacheckBinding = "org.scalaz"           %% "scalaz-scalacheck-binding" % scalazCore.revision
   lazy val scalaCheck          = "org.scalacheck"           %% "scalacheck"              % "1.12.4"
-  lazy val specs2              = "org.specs2"               %% "specs2-core"             % "3.6.5"
+  lazy val specs2              = "org.specs2"               %% "specs2-core"             % "3.7"
   lazy val specs2MatcherExtra  = "org.specs2"               %% "specs2-matcher-extra"    % specs2.revision
   lazy val specs2Scalacheck    = "org.specs2"               %% "specs2-scalacheck"       % specs2.revision
-  lazy val scalazStream        = "org.scalaz.stream"        %% "scalaz-stream"           % "0.8"
+  lazy val scalazStream        = "org.scalaz.stream"        %% "scalaz-stream"           % "0.8a-e269de9"
   lazy val scodecBits          = "org.scodec"               %% "scodec-bits"             % "1.0.9"
   lazy val tomcatCatalina      = "org.apache.tomcat"         % "tomcat-catalina"         % "8.0.24"
   lazy val tomcatCoyote        = "org.apache.tomcat"         % "tomcat-coyote"           % tomcatCatalina.revision

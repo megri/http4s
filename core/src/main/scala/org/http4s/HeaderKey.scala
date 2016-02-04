@@ -38,12 +38,13 @@ object HeaderKey {
   trait Recurring extends Extractable {
     type HeaderT <: Header.Recurring
     type GetT = Option[HeaderT]
-    def apply(values: NonEmptyList[HeaderT#Value]): HeaderT
+    protected def apply(values: List[HeaderT#Value]): HeaderT
+    def apply(values: NonEmptyList[HeaderT#Value]): HeaderT = apply(values.list.toList)
     def apply(first: HeaderT#Value, more: HeaderT#Value*): HeaderT = apply(NonEmptyList.apply(first, more: _*))
     def from(headers: Headers): Option[HeaderT] = {
-      @tailrec def loop(hs: Headers, acc: NonEmptyList[HeaderT#Value]): NonEmptyList[HeaderT#Value] =
+      @tailrec def loop(hs: Headers, acc: List[HeaderT#Value]): List[HeaderT#Value] =
         if (hs.nonEmpty) matchHeader(hs.head) match {
-          case Some(header) => loop(hs.tail, acc append header.values)
+          case Some(header) => loop(hs.tail, acc ::: header.values)
           case None => loop(hs.tail, acc)
         }
         else acc

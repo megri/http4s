@@ -132,11 +132,11 @@ class SimpleHeadersSpec extends Http4sSpec {
     }
 
     "parse X-Forward-Spec" in {
-      val header1 = `X-Forwarded-For`(NonEmptyList(Some(InetAddress.getLocalHost)))
+      val header1 = `X-Forwarded-For`(Some(InetAddress.getLocalHost))
       HttpHeaderParser.parseHeader(header1.toRaw) must be_\/-(header1)
 
-      val header2 = `X-Forwarded-For`(NonEmptyList(Some(InetAddress.getLocalHost),
-                                Some(InetAddress.getLoopbackAddress)))
+      val header2 = `X-Forwarded-For`(Some(InetAddress.getLocalHost),
+                                Some(InetAddress.getLoopbackAddress))
       HttpHeaderParser.parseHeader(header2.toRaw) must be_\/-(header2)
 
       val bad = Header(header1.name.toString, "foo")

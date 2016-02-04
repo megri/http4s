@@ -104,15 +104,20 @@ object Header {
   trait Recurring extends Parsed {
     type Value
     def key: HeaderKey.Recurring
-    def values: NonEmptyList[Value]
+    def values: List[Value]
   }
 
   /** Simple helper trait that provides a default way of rendering the value */
   trait RecurringRenderable extends Recurring {
     type Value <: Renderable
     override def renderValue(writer: Writer): writer.type = {
-      values.head.render(writer)
-      values.tail.foreach( writer << ", " << _ )
+      values match {
+        case List(head, tail@_*) =>
+          head.render(writer)
+          tail.foreach( writer << ", " << _ )
+        case _ =>
+          // should not happen
+      }
       writer
     }
   }

@@ -33,7 +33,7 @@ class ProxyAuthenticateHeaderSpec extends Specification with HeaderParserHelper[
       val twotypes = "Newauth realm=\"apps\", Basic realm=\"simple\""
       val twoparsed = Challenge("Newauth", "apps")::Challenge("Basic","simple")::Nil
 
-      parse(twotypes).values.list must be_==(twoparsed)
+      parse(twotypes).values must be_==(twoparsed)
     }
 
     "parse mulmultiple concatenated authentications with params" in {
@@ -41,7 +41,7 @@ class ProxyAuthenticateHeaderSpec extends Specification with HeaderParserHelper[
       val twp = Challenge("Newauth", "apps", Map("type"->"1","title"->"Login to apps"))::
         Challenge("Basic","simple")::Nil
 
-      parse(twowparams).values.list must be_==(twp)
+      parse(twowparams).values must be_==(twp)
     }
   }
 }
